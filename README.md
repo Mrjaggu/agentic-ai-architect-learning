@@ -2,177 +2,23 @@
 
 ### 🚀 AI Architect | GenAI | Agentic AI | Enterprise AI Systems
 
-Welcome to my profile! 👋
+An **AI Architect** with **7+ years of experience** across Artificial Intelligence, Machine Learning, NLP, Search, and Information Retrieval. Specializing in designing, architecting, and scaling production-grade **Generative AI, Agentic Workflows, and Multi-Agent Systems** for enterprise platforms.
 
-I'm passionate about building **intelligent, scalable AI systems** that solve real-world enterprise problems.
+* 🧠 **Core Focus:** Agentic AI Systems, Multi-Agent Orchestration, RAG Architecture, Knowledge Graphs, Model Context Protocol (MCP), and LLM Observability & Evals.
+* 🎯 **Mission:** Building deterministic, reliable, and enterprise-ready AI platforms that solve real-world problems.
 
-With **7+ years of experience** across Artificial Intelligence, Machine Learning, NLP, Search, and Information Retrieval, I currently work from an **architecture and solution design perspective**, focusing on the next generation of **Generative AI and Agentic AI systems**.
+📫 **Let's Connect:** [LinkedIn](https://www.linkedin.com/in/ajayjangid21/) | [Medium](https://medium.com/@jangidajay271) | [Email](mailto:jangidajay271@gmail.com)
 
 ---
 
-## 📖 Live Interactive Curriculum Reader
+📖 **Read the Chapters in the Interactive Reader:**  
 👉 **[Click Here to Open the Live Reader on GitHub Pages](https://mrjaggu.github.io/agentic-ai-architect-learning/)**
-
----
-
-## 🧠 What I'm Working On
-
-🔭 **Enterprise GenAI & Agentic AI Systems**
-
-Currently exploring and building around:
-
-* 🤖 Agentic AI & Multi-Agent Systems
-* 🧠 Large Language Models (LLMs)
-* 📚 Retrieval-Augmented Generation (RAG)
-* 🔎 Search, Ranking & Information Retrieval
-* 🕸️ Knowledge Graphs & Graph-based AI
-* 🔌 Model Context Protocol (MCP)
-* 🏗️ AI Architecture & Agent Design Patterns
-* 📊 LLM Observability, Evaluation & Monitoring
-* 🛠️ Production-grade AI Systems & Agent Harnesses
-
----
-
-## ⚡ My AI Architecture Focus
-
-```text
-AI Architecture
-      │
-      ├── 🤖 Agentic AI
-      │      ├── Single Agent Systems
-      │      ├── Multi-Agent Systems
-      │      └── Agent Orchestration
-      │
-      ├── 🧠 Generative AI
-      │      ├── LLM Applications
-      │      ├── RAG
-      │      └── Fine-tuning
-      │
-      ├── 🔎 Retrieval & Knowledge
-      │      ├── Search
-      │      ├── Information Retrieval
-      │      ├── Knowledge Graphs
-      │      └── Vector Databases
-      │
-      └── 🏗️ Enterprise AI
-             ├── MCP & Tool Integration
-             ├── Observability
-             ├── Evaluation
-             └── Scalable AI Architecture
-```
-
----
-
-## 🛠️ Areas of Expertise
-
-### 🤖 Artificial Intelligence & Machine Learning
-
-* Generative AI & Large Language Models
-* Agentic AI
-* Transformers & NLP
-* Retrieval-Augmented Generation (RAG)
-* Information Retrieval & Search
-* Recommendation & Ranking Systems
-* Machine Learning & Deep Learning
-
-### 🏗️ AI Engineering & Architecture
-
-* AI Agent Architecture
-* Multi-Agent Orchestration
-* Model Context Protocol (MCP)
-* Vector Search & Embeddings
-* Knowledge Graphs & GraphRAG
-* LLM Evaluation
-* AI Observability
-* Enterprise AI Design Patterns
-* Production AI Systems
-
----
-
-## 🌱 Currently Learning & Building
-
-I'm continuously exploring how AI is evolving beyond traditional machine learning models and simple LLM applications.
-
-Current areas of deep exploration:
-
-* 🧩 Agent Harnesses
-* 🔄 Agent Memory & State Management
-* 🧠 Knowledge Representation
-* 🕸️ Knowledge Graphs & GraphRAG
-* 📊 LLM Evaluation Frameworks
-* 🔍 AI Observability
-* 🔌 Building MCP Servers
-* 🤖 Multi-Agent Architectures
-* 🏗️ Production-grade Agentic AI Systems
-
----
-
-## 👯 Let's Collaborate
-
-I'm interested in collaborating on projects involving:
-
-* 🤖 Agentic AI
-* 🧠 Generative AI
-* 📚 RAG & Knowledge Systems
-* 🔎 Search & Information Retrieval
-* 🕸️ Knowledge Graphs
-* 🔌 MCP Servers & AI Integrations
-* 📊 LLM Evaluation & Observability
-* 🏗️ Enterprise AI Architecture
-
----
-
-## 💬 Ask Me About
-
-* Artificial Intelligence
-* Generative AI
-* Agentic AI Architecture
-* RAG Systems
-* Search & Information Retrieval
-* Enterprise AI Systems
-* AI Solution Architecture
-
----
-
-## 📫 Let's Connect
-
-<a href="https://www.linkedin.com/in/ajayjangid21/" target="_blank">
-  <img src="https://img.shields.io/badge/LinkedIn-Ajay%20Jangid-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/>
-</a>
-
-<a href="https://medium.com/@jangidajay271" target="_blank">
-  <img src="https://img.shields.io/badge/Medium-Ajay%20Jangid-000000?style=for-the-badge&logo=medium&logoColor=white" alt="Medium"/>
-</a>
-
-<a href="mailto:jangidajay271@gmail.com">
-  <img src="https://img.shields.io/badge/Email-Contact%20Me-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"/>
-</a>
-
----
-
-## 💭 My Philosophy
-
-> **AI is moving from models that simply generate answers to intelligent systems that can reason, retrieve information, use tools, collaborate, and take action.**
-
-I'm passionate about understanding and architecting these systems for **real-world, scalable enterprise applications**.
-
----
-
-### ⭐ Building the future of Enterprise AI — one intelligent system at a time.
-
----
-
-## 📊 GitHub Stats
-
-[![Ajay's GitHub stats](https://github-readme-stats.vercel.app/api?username=Mrjaggu&show_icons=true&theme=radical)](https://github.com/Mrjaggu)
-
-[![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=Mrjaggu&layout=compact&theme=radical)](https://github.com/Mrjaggu)
 
 ---
 
 # 📚 Agentic AI Architect Curriculum
 
-Welcome to the **Agentic AI Architect Curriculum**! This is a comprehensive, 23-chapter learning program designed to train Enterprise Agentic AI and AI Platform Architects.
+Welcome to the **Agentic AI Architect Curriculum**! This repository features a comprehensive, 23-chapter learning program designed to train Enterprise Agentic AI and AI Platform Architects.
 
 ---
 
