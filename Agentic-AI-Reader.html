@@ -1,70 +1,645 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Agentic AI Architect — Reader</title>
+<title>Agentic AI Architect — Interactive Learning Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#faf9f6; --panel:#ffffff; --ink:#1f2430; --muted:#6b7280;
-  --accent:#8b1f2f; --accent-ink:#ffffff; --border:#e4e1da;
-  --code-bg:#f1efe9; --code-ink:#2d3340; --pre-bg:#23272f; --pre-ink:#e8eaf0;
-  --th-bg:#f3f1ea;
+:root {
+  --bg: #0d0f14;
+  --panel: #141720;
+  --panel-border: #232736;
+  --ink: #e6e8ee;
+  --muted: #8b92a4;
+  --accent: #818cf8;
+  --accent-hover: #6366f1;
+  --accent-light: rgba(129, 140, 248, 0.12);
+  --accent-ink: #ffffff;
+  --border: #202433;
+  --code-bg: #181b26;
+  --code-ink: #f0f2f8;
+  --pre-bg: #0b0d12;
+  --pre-ink: #e1e4ed;
+  --th-bg: #1c202d;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --card-bg: #171b26;
 }
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#15171c; --panel:#1c1f26; --ink:#e7e9ee; --muted:#9aa1ad;
-    --accent:#e0596b; --accent-ink:#15171c; --border:#2c303a;
-    --code-bg:#262a33; --code-ink:#e2e5ec; --pre-bg:#111318; --pre-ink:#dfe3ea;
-    --th-bg:#242832;
+
+html.light {
+  --bg: #f8fafc;
+  --panel: #ffffff;
+  --panel-border: #e2e8f0;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-light: rgba(79, 70, 229, 0.08);
+  --accent-ink: #ffffff;
+  --border: #e2e8f0;
+  --code-bg: #f1f5f9;
+  --code-ink: #1e293b;
+  --pre-bg: #0f172a;
+  --pre-ink: #f8fafc;
+  --th-bg: #f8fafc;
+  --success: #059669;
+  --warning: #d97706;
+  --card-bg: #ffffff;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.7;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  transition: background 0.2s, color 0.2s;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* Progress bar at top */
+#reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
+  z-index: 100;
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* Header */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--panel);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--panel-border);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 64px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.brand-badge {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #ffffff;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Mobile Toggle */
+.mobile-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--ink);
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+/* Search Input in Header */
+.search-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  cursor: pointer;
+  flex: 1;
+  max-width: 380px;
+  transition: all 0.2s;
+}
+.search-btn:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+.search-btn kbd {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  margin-left: auto;
+  font-family: inherit;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.theme-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--ink);
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: background 0.2s, border-color 0.2s;
+}
+.theme-toggle:hover {
+  background: var(--accent-light);
+  border-color: var(--accent);
+}
+
+/* Layout container */
+.app-container {
+  display: flex;
+  flex: 1;
+}
+
+/* Sidebar */
+aside.sidebar {
+  width: 310px;
+  background: var(--panel);
+  border-right: 1px solid var(--panel-border);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 64px;
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+  padding: 16px;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+.progress-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+.progress-card-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.progress-meter {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-meter-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #34d399);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.module-group {
+  margin-bottom: 18px;
+}
+.module-header {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 8px;
+  padding-left: 6px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  margin-bottom: 2px;
+}
+.nav-link:hover {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+.nav-link.active {
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+.nav-checkbox {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1.5px solid var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  transition: all 0.15s;
+}
+.nav-checkbox.checked {
+  background: var(--success);
+  border-color: var(--success);
+  color: #ffffff;
+}
+
+/* Main Content Area */
+main.content-area {
+  flex: 1;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 36px 40px 120px;
+  width: 100%;
+}
+
+.chapter-meta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin-bottom: 28px;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+.chapter-meta-bar button {
+  background: var(--accent-light);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 4px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.chapter-meta-bar button:hover {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.chapter h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 0.2em 0 0.6em;
+  color: var(--ink);
+}
+.chapter h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin-top: 2em;
+  padding-bottom: 0.4em;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+}
+.chapter h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 1.6em;
+  color: var(--ink);
+}
+
+.chapter p, .chapter li {
+  font-size: 1.02rem;
+  color: var(--ink);
+}
+
+.chapter blockquote {
+  margin: 1.5em 0;
+  padding: 12px 18px;
+  border-left: 4px solid var(--accent);
+  background: var(--panel);
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  color: var(--ink);
+}
+
+.chapter code {
+  background: var(--code-bg);
+  color: var(--code-ink);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.88em;
+}
+
+/* Code Blocks with Header Bar */
+.code-container {
+  position: relative;
+  margin: 1.5em 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #12151f;
+  padding: 6px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: #8b92a4;
+  border-bottom: 1px solid #1e2230;
+}
+.copy-code-btn {
+  background: transparent;
+  border: 1px solid #2d3345;
+  color: #c5cbd8;
+  padding: 2px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-family: sans-serif;
+  transition: all 0.15s;
+}
+.copy-code-btn:hover {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+}
+.chapter pre {
+  margin: 0;
+  background: var(--pre-bg);
+  color: var(--pre-ink);
+  padding: 16px;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.88em;
+  line-height: 1.6;
+}
+.chapter pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+  font-size: 1em;
+}
+
+/* Tables */
+.chapter table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  margin: 1.5em 0;
+  font-size: 0.94rem;
+  display: block;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.chapter th {
+  background: var(--th-bg);
+  font-weight: 600;
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.chapter td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.chapter tr:last-child td { border-bottom: none; }
+
+/* Bio Card Styling */
+.bio-card {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 14px !important;
+  padding: 24px !important;
+  margin-bottom: 32px !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+}
+
+/* Floating Bottom Controls */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--panel);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--panel-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  z-index: 40;
+}
+.bottom-nav button {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: opacity 0.2s, filter 0.2s;
+}
+.bottom-nav button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.bottom-nav button:not(:disabled):hover {
+  filter: brightness(1.1);
+}
+
+/* Search Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  padding-top: 80px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.search-modal {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  width: 90%;
+  max-width: 620px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  max-height: 75vh;
+  display: flex;
+  flex-direction: column;
+}
+.search-modal-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.search-modal-header input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--ink);
+  font-size: 1.05rem;
+  font-family: inherit;
+}
+.search-results {
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.search-item {
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: var(--bg);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.search-item:hover {
+  background: var(--accent-light);
+}
+.search-item-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--accent);
+  margin-bottom: 2px;
+}
+.search-item-snippet {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+  aside.sidebar {
+    position: fixed;
+    left: 0;
+    top: 64px;
+    bottom: 0;
+    z-index: 90;
+    transform: translateX(-100%);
+    width: 280px;
   }
+  aside.sidebar.open {
+    transform: translateX(0);
+  }
+  .mobile-toggle { display: block; }
+  main.content-area { padding: 20px 20px 100px; }
+  .search-btn span { display: none; }
 }
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);
-  font:16px/1.65 Georgia,'Times New Roman',serif}
-header{position:sticky;top:0;z-index:10;background:var(--panel);
-  border-bottom:1px solid var(--border);padding:10px 16px;
-  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif}
-button{background:var(--accent);color:var(--accent-ink);border:none;border-radius:8px;
-  padding:8px 16px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
-button:disabled{opacity:.35;cursor:default}
-button:not(:disabled):hover{filter:brightness(1.1)}
-select{background:var(--panel);color:var(--ink);border:1px solid var(--border);
-  border-radius:8px;padding:8px 10px;font-size:14px;font-family:inherit;
-  max-width:52vw;flex:1;min-width:180px}
-#pos{color:var(--muted);font-size:13px;white-space:nowrap;margin-left:auto}
-main{max-width:800px;margin:0 auto;padding:28px 20px 90px}
-.chapter h1{font-size:1.7em;line-height:1.25;margin:.4em 0 .6em}
-.chapter h2{font-size:1.25em;margin-top:1.8em;border-bottom:1px solid var(--border);padding-bottom:.25em}
-.chapter blockquote{margin:1.2em 0;padding:.6em 1em;border-left:4px solid var(--accent);
-  background:var(--panel);font-style:italic}
-.chapter code{background:var(--code-bg);color:var(--code-ink);padding:.1em .35em;
-  border-radius:4px;font:0.86em/1.5 ui-monospace,'SF Mono',Consolas,Menlo,monospace}
-.chapter pre{background:var(--pre-bg);color:var(--pre-ink);padding:14px 16px;
-  border-radius:10px;overflow-x:auto;line-height:1.5}
-.chapter pre code{background:none;color:inherit;padding:0;font-size:.84em}
-.chapter table{border-collapse:collapse;width:100%;margin:1.2em 0;font-size:.92em;
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;display:block;overflow-x:auto}
-.chapter th{background:var(--th-bg);text-align:left}
-.chapter th,.chapter td{border:1px solid var(--border);padding:7px 11px;vertical-align:top}
-.chapter em{color:inherit}
-.chapter hr{border:none;border-top:1px solid var(--border);margin:2em 0}
-footer{position:fixed;bottom:0;left:0;right:0;background:var(--panel);
-  border-top:1px solid var(--border);display:flex;justify-content:space-between;
-  padding:10px 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-footer button{min-width:110px}
-[hidden]{display:none!important}
 </style>
 </head>
 <body>
+
+<div id="reading-progress"></div>
+
 <header>
-  <button id="prevT">&#8592; Previous</button>
-  <button id="nextT">Next &#8594;</button>
-  <select id="toc" aria-label="Chapter"></select>
-  <span id="pos"></span>
+  <button class="mobile-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">☰</button>
+  <a href="#" class="brand">
+    ⚡ Agentic AI Architect
+    <span class="brand-badge">PRO</span>
+  </a>
+
+  <button class="search-btn" id="openSearch">
+    🔍 <span>Search curriculum...</span>
+    <kbd>/</kbd>
+  </button>
+
+  <div class="header-right">
+    <button class="theme-toggle" id="themeToggle" title="Toggle Light/Dark Theme">🌙</button>
+  </div>
 </header>
-<main><section class="chapter" id="c0" hidden>
+
+<div class="app-container">
+  <aside class="sidebar" id="sidebar">
+    <div class="progress-card">
+      <div class="progress-card-title">
+        <span>Curriculum Progress</span>
+        <span id="progressPercent">0%</span>
+      </div>
+      <div class="progress-meter">
+        <div class="progress-meter-fill" id="progressMeterFill"></div>
+      </div>
+    </div>
+    <div id="sidebarNav"></div>
+  </aside>
+
+  <main class="content-area">
+    <div class="chapter-meta-bar" id="chapterMetaBar">
+      <span id="readTime">⏱️ ~5 min read</span>
+      <button id="toggleCompleteBtn">Mark as Completed</button>
+    </div>
+    <section class="chapter" id="c0" hidden>
 <div class="bio-card" style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:28px;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
   <h2 style="margin-top:0;font-size:1.6em;margin-bottom:4px;">Hi there 👋 I'm Ajay Jangid</h2>
   <div style="color:var(--accent);font-weight:600;font-size:1.05em;margin-bottom:12px;">🚀 AI Architect | GenAI | Agentic AI | Enterprise AI Systems</div>
@@ -2371,48 +2946,287 @@ Graded — per-agent (revoke identity), per-integration (gateway), platform-wide
 <h2>The meta-pattern across every case</h2>
 <p>Read the six cases together and one shape repeats: <strong>classify → route → deterministic where possible → agentic where necessary → graph/semantic layer for structure and explainability → cache the head of the distribution → bound and observe everything.</strong> That is precisely the reference architecture of Ch21 — which is the point: the curriculum isn't a theory of how this <em>should</em> work; it's a description of how the systems that work <em>do</em>.</p>
 <h2>Lab (capstone-level)</h2>
-<p>Recreate selective agency on your banking platform: add a complexity classifier in front of the Ch12 router, serve the simple 70% via cached/workflow paths, and measure — latency, cost per query, and answer quality across both paths. Present it Walmart-style: one number for leadership ("X% latency/cost reduction, quality flat or up"), one architecture diagram for engineers.</p></section></main>
-<footer>
-  <button id="prevB">&#8592; Previous</button>
-  <button id="nextB">Next &#8594;</button>
-</footer>
+<p>Recreate selective agency on your banking platform: add a complexity classifier in front of the Ch12 router, serve the simple 70% via cached/workflow paths, and measure — latency, cost per query, and answer quality across both paths. Present it Walmart-style: one number for leadership ("X% latency/cost reduction, quality flat or up"), one architecture diagram for engineers.</p></section>
+  </main>
+</div>
+
+<div class="bottom-nav">
+  <button id="prevBtn">← Previous Chapter</button>
+  <span id="posIndicator" style="font-size:0.88rem;color:var(--muted);font-weight:500;">Overview</span>
+  <button id="nextBtn">Next Chapter →</button>
+</div>
+
+<div class="modal-overlay" id="searchModal">
+  <div class="search-modal">
+    <div class="search-modal-header">
+      🔍 <input type="text" id="searchInput" placeholder="Search chapters, topics, tools (e.g. MCP, LangGraph)..." autofocus />
+    </div>
+    <div class="search-results" id="searchResults">
+      <div style="padding:20px;text-align:center;color:var(--muted);font-size:0.9rem;">Type to start searching across all 23 chapters...</div>
+    </div>
+  </div>
+</div>
+
 <script>
-const META = [{"label": "Overview", "title": "Curriculum Overview"}, {"label": "Ch 1", "title": "The Evolution of AI Systems"}, {"label": "Ch 2", "title": "Anatomy of an AI Agent"}, {"label": "Ch 3", "title": "Agent Design Patterns \u2014 and When NOT to Use Them"}, {"label": "Ch 4", "title": "Agent Graphs & State Machines"}, {"label": "Ch 5", "title": "Agent Harness Engineering"}, {"label": "Ch 6", "title": "Backend & System Design for Agent Services"}, {"label": "Ch 7", "title": "Deploying Agent Systems \u2014 IaC, CI/CD & Cloud Runtime"}, {"label": "Ch 8", "title": "Context Engineering"}, {"label": "Ch 9", "title": "Memory Architecture"}, {"label": "Ch 10", "title": "Enterprise RAG, Properly"}, {"label": "Ch 11", "title": "Knowledge Graphs & Graph RAG"}, {"label": "Ch 12", "title": "Agentic Retrieval & Knowledge Routing"}, {"label": "Ch 13", "title": "Tools & Function Calling"}, {"label": "Ch 14", "title": "MCP, A2A & the Agent Protocol Stack"}, {"label": "Ch 15", "title": "Multi-Agent Systems"}, {"label": "Ch 16", "title": "Agent Observability"}, {"label": "Ch 17", "title": "Evals"}, {"label": "Ch 18", "title": "Reliability & Cost Engineering"}, {"label": "Ch 19", "title": "Security & Guardrails"}, {"label": "Ch 20", "title": "Autonomy Levels, Human-in-the-Loop & Governance"}, {"label": "Ch 21", "title": "The Enterprise Agentic AI Reference Architecture"}, {"label": "Ch 22", "title": "Interview Q&A Bank \u2014 What They Actually Ask"}, {"label": "Ch 23", "title": "End-to-End Case Studies \u2014 System Design Interview + Real Industry Stack"}];
+const META = [
+  {"label": "Overview", "title": "Curriculum Overview", "module": "Foundations"},
+  {"label": "Ch 1", "title": "The Evolution of AI Systems", "module": "Module A — Foundations"},
+  {"label": "Ch 2", "title": "Anatomy of an AI Agent", "module": "Module A — Foundations"},
+  {"label": "Ch 3", "title": "Agent Design Patterns", "module": "Module A — Foundations"},
+  {"label": "Ch 4", "title": "Agent Graphs & State Machines", "module": "Module B — Orchestration & Harness"},
+  {"label": "Ch 5", "title": "Agent Harness Engineering", "module": "Module B — Orchestration & Harness"},
+  {"label": "Ch 6", "title": "Backend & System Design for Agent Services", "module": "Module B — Orchestration & Harness"},
+  {"label": "Ch 7", "title": "Deploying Agent Systems", "module": "Module B — Orchestration & Harness"},
+  {"label": "Ch 8", "title": "Context Engineering", "module": "Module B — Orchestration & Harness"},
+  {"label": "Ch 9", "title": "Memory Architecture", "module": "Module B — Orchestration & Harness"},
+  {"label": "Ch 10", "title": "Enterprise RAG, Properly", "module": "Module C — Knowledge Architecture"},
+  {"label": "Ch 11", "title": "Knowledge Graphs & Graph RAG", "module": "Module C — Knowledge Architecture"},
+  {"label": "Ch 12", "title": "Agentic Retrieval & Knowledge Routing", "module": "Module C — Knowledge Architecture"},
+  {"label": "Ch 13", "title": "Tools & Function Calling", "module": "Module D — Tools, MCP & Multi-Agent"},
+  {"label": "Ch 14", "title": "MCP, A2A & Protocol Stack", "module": "Module D — Tools, MCP & Multi-Agent"},
+  {"label": "Ch 15", "title": "Multi-Agent Systems", "module": "Module D — Tools, MCP & Multi-Agent"},
+  {"label": "Ch 16", "title": "Agent Observability", "module": "Module E — Production AI"},
+  {"label": "Ch 17", "title": "Evals", "module": "Module E — Production AI"},
+  {"label": "Ch 18", "title": "Reliability & Cost Engineering", "module": "Module E — Production AI"},
+  {"label": "Ch 19", "title": "Security & Guardrails", "module": "Module F — Governance & Platform"},
+  {"label": "Ch 20", "title": "Autonomy Levels & Governance", "module": "Module F — Governance & Platform"},
+  {"label": "Ch 21", "title": "Enterprise Reference Architecture", "module": "Module F — Governance & Platform"},
+  {"label": "Ch 22", "title": "Interview Q&A Bank", "module": "Module F — Governance & Platform"},
+  {"label": "Ch 23", "title": "End-to-End Case Studies", "module": "Module F — Governance & Platform"}
+];
+
 const secs = document.querySelectorAll('.chapter');
-const toc = document.getElementById('toc');
-META.forEach((m,i)=>{
-  const o = document.createElement('option');
-  o.value = i; o.textContent = (m.label==='Overview'?'':m.label+' — ')+m.title;
-  toc.appendChild(o);
-});
 let cur = 0;
-function show(i, push){
-  cur = Math.max(0, Math.min(META.length-1, i));
-  secs.forEach((s,j)=>{ s.hidden = j!==cur; });
-  toc.value = cur;
-  document.getElementById('pos').textContent = (cur===0?'Overview':META[cur].label)+' / '+(META.length-1);
-  for (const id of ['prevT','prevB']) document.getElementById(id).disabled = cur===0;
-  for (const id of ['nextT','nextB']) document.getElementById(id).disabled = cur===META.length-1;
-  if (push!==false) location.hash = cur===0 ? 'overview' : 'ch'+String(cur).padStart(2,'0');
-  window.scrollTo(0,0);
+let completedSet = new Set(JSON.parse(localStorage.getItem('completed_chapters') || '[]'));
+
+// Theme Toggle
+const themeToggle = document.getElementById('themeToggle');
+function setTheme(isDark) {
+  document.documentElement.classList.toggle('dark', isDark);
+  document.documentElement.classList.toggle('light', !isDark);
+  themeToggle.textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('pref_theme', isDark ? 'dark' : 'light');
 }
-function fromHash(){
-  const h = location.hash.replace('#','');
-  if (h==='overview') return 0;
-  const m = h.match(/^ch(\d+)$/);
-  return m ? parseInt(m[1],10) : 0;
-}
-document.getElementById('prevT').onclick = ()=>show(cur-1);
-document.getElementById('prevB').onclick = ()=>show(cur-1);
-document.getElementById('nextT').onclick = ()=>show(cur+1);
-document.getElementById('nextB').onclick = ()=>show(cur+1);
-toc.onchange = ()=>show(parseInt(toc.value,10));
-window.addEventListener('hashchange', ()=>show(fromHash(), false));
-document.addEventListener('keydown', e=>{
-  if (e.target.tagName==='SELECT') return;
-  if (e.key==='ArrowLeft') show(cur-1);
-  if (e.key==='ArrowRight') show(cur+1);
+setTheme(localStorage.getItem('pref_theme') !== 'light');
+themeToggle.onclick = () => setTheme(!document.documentElement.classList.contains('dark'));
+
+// Sidebar Construction
+const sidebarNav = document.getElementById('sidebarNav');
+let lastModule = '';
+
+META.forEach((m, i) => {
+  if (m.module !== lastModule) {
+    lastModule = m.module;
+    const modHeader = document.createElement('div');
+    modHeader.className = 'module-header';
+    modHeader.textContent = m.module;
+    sidebarNav.appendChild(modHeader);
+  }
+
+  const link = document.createElement('div');
+  link.className = 'nav-link';
+  link.dataset.index = i;
+
+  const cb = document.createElement('div');
+  cb.className = 'nav-checkbox' + (completedSet.has(i) ? ' checked' : '');
+  cb.textContent = completedSet.has(i) ? '✓' : '';
+  cb.onclick = (e) => {
+    e.stopPropagation();
+    toggleComplete(i);
+  };
+
+  const label = document.createElement('span');
+  label.textContent = (m.label === 'Overview' ? 'Overview' : m.label + ' — ' + m.title);
+
+  link.appendChild(cb);
+  link.appendChild(label);
+  link.onclick = () => show(i);
+
+  sidebarNav.appendChild(link);
 });
+
+function updateProgressUI() {
+  const pct = Math.round((completedSet.size / META.length) * 100);
+  document.getElementById('progressPercent').textContent = pct + '%';
+  document.getElementById('progressMeterFill').style.width = pct + '%';
+  
+  document.querySelectorAll('.nav-checkbox').forEach((cb, idx) => {
+    const isDone = completedSet.has(idx);
+    cb.classList.toggle('checked', isDone);
+    cb.textContent = isDone ? '✓' : '';
+  });
+
+  const toggleBtn = document.getElementById('toggleCompleteBtn');
+  if (completedSet.has(cur)) {
+    toggleBtn.textContent = 'Completed ✓';
+    toggleBtn.style.background = 'var(--success)';
+    toggleBtn.style.color = '#fff';
+    toggleBtn.style.borderColor = 'var(--success)';
+  } else {
+    toggleBtn.textContent = 'Mark as Completed';
+    toggleBtn.style.background = 'var(--accent-light)';
+    toggleBtn.style.color = 'var(--accent)';
+    toggleBtn.style.borderColor = 'var(--accent)';
+  }
+}
+
+function toggleComplete(idx) {
+  if (completedSet.has(idx)) completedSet.delete(idx);
+  else completedSet.add(idx);
+  localStorage.setItem('completed_chapters', JSON.stringify([...completedSet]));
+  updateProgressUI();
+}
+
+document.getElementById('toggleCompleteBtn').onclick = () => toggleComplete(cur);
+
+// Show Chapter Function
+function show(i, push) {
+  cur = Math.max(0, Math.min(META.length - 1, i));
+  secs.forEach((s, j) => { s.hidden = j !== cur; });
+
+  document.querySelectorAll('.nav-link').forEach((l, idx) => {
+    l.classList.toggle('active', idx === cur);
+  });
+
+  document.getElementById('posIndicator').textContent = (cur === 0 ? 'Overview' : META[cur].label) + ' / ' + (META.length - 1);
+  document.getElementById('prevBtn').disabled = cur === 0;
+  document.getElementById('nextBtn').disabled = cur === META.length - 1;
+
+  // Calculate read time
+  const currentSec = secs[cur];
+  const text = currentSec.innerText || '';
+  const wordCount = text.split(/\s+/).length;
+  const readMins = Math.max(1, Math.round(wordCount / 200));
+  document.getElementById('readTime').textContent = `⏱️ ~${readMins} min read (${wordCount.toLocaleString()} words)`;
+
+  updateProgressUI();
+
+  if (push !== false) location.hash = cur === 0 ? 'overview' : 'ch' + String(cur).padStart(2, '0');
+  window.scrollTo(0, 0);
+  
+  // Close sidebar on mobile
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function fromHash() {
+  const h = location.hash.replace('#', '');
+  if (h === 'overview') return 0;
+  const m = h.match(/^ch(\d+)$/);
+  return m ? parseInt(m[1], 10) : 0;
+}
+
+document.getElementById('prevBtn').onclick = () => show(cur - 1);
+document.getElementById('nextBtn').onclick = () => show(cur + 1);
+window.addEventListener('hashchange', () => show(fromHash(), false));
+
+// Wrap Code blocks with Copy Buttons
+secs.forEach(sec => {
+  sec.querySelectorAll('pre').forEach(pre => {
+    const parent = pre.parentNode;
+    if (parent.classList.contains('code-container')) return;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-container';
+
+    const header = document.createElement('div');
+    header.className = 'code-header';
+    header.innerHTML = '<span>Snippet</span>';
+
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'copy-code-btn';
+    copyBtn.textContent = 'Copy';
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(pre.innerText);
+      copyBtn.textContent = 'Copied! ✓';
+      setTimeout(() => copyBtn.textContent = 'Copy', 2000);
+    };
+
+    header.appendChild(copyBtn);
+    parent.insertBefore(wrapper, pre);
+    wrapper.appendChild(header);
+    wrapper.appendChild(pre);
+  });
+});
+
+// Scroll Reading Progress
+window.onscroll = () => {
+  const winScroll = document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = (winScroll / height) * 100;
+  document.getElementById('reading-progress').style.width = scrolled + '%';
+};
+
+// Search Engine
+const searchModal = document.getElementById('searchModal');
+const searchInput = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
+
+function openSearchModal() {
+  searchModal.classList.add('open');
+  searchInput.focus();
+}
+function closeSearchModal() {
+  searchModal.classList.remove('open');
+}
+
+document.getElementById('openSearch').onclick = openSearchModal;
+searchModal.onclick = (e) => { if (e.target === searchModal) closeSearchModal(); };
+
+searchInput.oninput = () => {
+  const q = searchInput.value.toLowerCase().trim();
+  if (!q) {
+    searchResults.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:0.9rem;">Type to start searching...</div>';
+    return;
+  }
+
+  let matches = [];
+  secs.forEach((sec, idx) => {
+    const text = sec.innerText;
+    if (text.toLowerCase().includes(q)) {
+      const matchPos = text.toLowerCase().indexOf(q);
+      const snippet = text.substring(Math.max(0, matchPos - 40), Math.min(text.length, matchPos + 80)).replace(/\n/g, ' ');
+      matches.push({ idx, meta: META[idx], snippet });
+    }
+  });
+
+  if (matches.length === 0) {
+    searchResults.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:0.9rem;">No matching chapters found.</div>';
+    return;
+  }
+
+  searchResults.innerHTML = '';
+  matches.slice(0, 8).forEach(m => {
+    const item = document.createElement('div');
+    item.className = 'search-item';
+    item.innerHTML = `
+      <div class="search-item-title">${m.meta.label === 'Overview' ? 'Overview' : m.meta.label + ' — ' + m.meta.title}</div>
+      <div class="search-item-snippet">...${m.snippet}...</div>
+    `;
+    item.onclick = () => {
+      closeSearchModal();
+      show(m.idx);
+    };
+    searchResults.appendChild(item);
+  });
+};
+
+// Keyboard Shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeSearchModal();
+  if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+    e.preventDefault();
+    openSearchModal();
+  }
+  if (document.activeElement.tagName === 'INPUT') return;
+  if (e.key === 'ArrowLeft') show(cur - 1);
+  if (e.key === 'ArrowRight') show(cur + 1);
+});
+
+// Mobile Sidebar Toggle
+document.getElementById('sidebarToggle').onclick = () => {
+  document.getElementById('sidebar').classList.toggle('open');
+};
+
 show(fromHash(), false);
 </script>
 </body>
