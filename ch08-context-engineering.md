@@ -6,15 +6,15 @@
 
 Every model call is a context assembly decision:
 
-```text
-SYSTEM (identity, rules, tool schemas)
-+ TASK (the goal, its constraints)
-+ MEMORY (relevant cross-run facts)      ← selected
-+ KNOWLEDGE (retrieved docs/rows)        ← selected
-+ HISTORY (state so far)                 ← compressed
-+ TOOL RESULTS (recent observations)     ← shaped
-──────────────────────────────────────────
-= the context window for THIS call
+```mermaid
+flowchart TD
+    SYS["SYSTEM<br/><small>identity, rules, tool schemas</small>"] --> CTX(["Context Window<br/>for THIS call"])
+    TASK["TASK<br/><small>goal, constraints</small>"] --> CTX
+    MEM["MEMORY<br/><small>selected</small>"] --> CTX
+    KNOW["KNOWLEDGE<br/><small>selected</small>"] --> CTX
+    HIST["HISTORY<br/><small>compressed</small>"] --> CTX
+    TOOLR["TOOL RESULTS<br/><small>shaped</small>"] --> CTX
+    style CTX fill:#4f46e5,color:#fff,stroke:none
 ```
 
 The harness assembles this deterministically each turn (Ch5). The engineering discipline is deciding the *policy*: what gets in, in what form, in what order, within what budget.

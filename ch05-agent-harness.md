@@ -6,19 +6,20 @@
 
 ## 1. The architecture
 
-```text
-        ┌──────────────────────────────┐
-        │        AGENT HARNESS         │
-        │  Context assembly            │
-        │  Tool execution & policies   │
-        │  Memory & state persistence  │
-        │  Retry / timeout / bounds    │
-        │  Sandboxing & permissions    │
-        │  Cost control                │
-        │  Eval & observability hooks  │
-        └──────────────┬───────────────┘
-                       ▼
-                    MODEL
+```mermaid
+flowchart TD
+    subgraph HARNESS["🛡️ AGENT HARNESS"]
+        direction TB
+        C1["Context assembly"]
+        C2["Tool execution & policies"]
+        C3["Memory & state persistence"]
+        C4["Retry / timeout / bounds"]
+        C5["Sandboxing & permissions"]
+        C6["Cost control"]
+        C7["Eval & observability hooks"]
+    end
+    HARNESS --> MODEL(["🧠 MODEL"])
+    style MODEL fill:#4f46e5,color:#fff,stroke:none
 ```
 
 The **harness** is everything around the model that makes an agent reliable. Five components form one interconnected design — **tools, prompts, memory, orchestration, and human-in-the-loop placement**. They are not five features to configure independently; a change to one shifts load onto the others. Better tools (Ch13) mean the model needs less prompt scaffolding to compensate for an awkward interface. Better memory (Ch9) means less context stuffing to re-explain what the system already knows. Get this coupling wrong and you end up "fixing" a tool problem by writing a longer prompt — which is how harnesses accrete into unmaintainable piles of instructions nobody can safely edit.

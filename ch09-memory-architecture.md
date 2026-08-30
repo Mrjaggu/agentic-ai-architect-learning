@@ -24,17 +24,16 @@ This is why memory design carries more governance weight than context design (Ch
 
 ## 3. The memory pipeline
 
-```text
-Conversation/run
-      │  extract (what's worth keeping? — a model decision)
-      ▼
-  consolidate (merge with what's known; update, don't duplicate;
-      │        resolve contradictions; decay/expire)
-      ▼
-    store (vector, graph, or structured — often all three)
-      │  retrieve (what's relevant to THIS moment? → into context, Ch8)
-      ▼
-   apply
+```mermaid
+flowchart LR
+    CR["Conversation<br/>/ run"] --> EX["Extract<br/><small>a model decision</small>"]
+    EX --> CO["Consolidate<br/><small>merge, resolve, decay</small>"]
+    CO --> ST[("Store<br/><small>vector / graph / structured</small>")]
+    ST --> RE["Retrieve<br/><small>into context, Ch8</small>"]
+    RE --> AP["Apply"]
+    style EX fill:#4f46e5,color:#fff,stroke:none
+    style ST fill:#b45309,color:#fff,stroke:none
+    style AP fill:#059669,color:#fff,stroke:none
 ```
 
 Each stage is a failure mode, and §2's incident touched three of the four: **extract too eagerly** and you store noise (and liabilities) — the fraud-pattern inference should never have passed an extraction policy that only allowed stated facts and confirmed case outcomes; **consolidate poorly** and memories contradict or, as here, simply never get revisited once the underlying situation resolved; **retrieve badly** and the agent "remembers" irrelevant things at the wrong moment — surfacing an unresolved risk flag in a loan pre-approval context it had no evidentiary connection to.

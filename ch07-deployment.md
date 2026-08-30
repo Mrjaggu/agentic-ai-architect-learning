@@ -8,18 +8,19 @@
 
 The Ch6 fast-path/slow-path split, made physical — three containers on ECS/Fargate behind a load balancer:
 
-```text
-Internet ──► ALB ──► frontend (UI, forwards /api/*)
-                        │
-                        ▼
-                       api  (accepts, enqueues)
-                        │
-                     queue (Redis/ElastiCache)
-                        │
-                        ▼
-                     worker (runs the agent)
-                        │
-              Postgres (RDS) · Secrets Manager · Bedrock
+```mermaid
+flowchart TD
+    NET(("Internet")) --> ALB["ALB"]
+    ALB --> FE["frontend (UI)<br/>forwards /api/*"]
+    FE --> API["api<br/>accepts, enqueues"]
+    API --> Q[("queue<br/>Redis/ElastiCache")]
+    Q --> WK["worker<br/>runs the agent"]
+    WK --> PG[("Postgres RDS")]
+    WK --> SEC[("Secrets Manager")]
+    WK --> BR[("Bedrock")]
+    style FE fill:#334155,color:#fff,stroke:none
+    style API fill:#4f46e5,color:#fff,stroke:none
+    style WK fill:#7c3aed,color:#fff,stroke:none
 ```
 
 Three properties of this shape matter more than any AWS detail:

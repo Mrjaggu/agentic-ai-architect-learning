@@ -4,8 +4,17 @@
 
 ## 1. The framing
 
-```text
-LLM Application → RAG → Agents → Agentic Systems → Enterprise Agent Platforms
+```mermaid
+flowchart LR
+    A["💬 LLM Application<br/><small>2022–23</small>"] --> B["📚 RAG<br/><small>2023–24</small>"]
+    B --> C["🤖 Agents<br/><small>2024–25</small>"]
+    C --> D["🕸️ Agentic Systems<br/><small>2025</small>"]
+    D --> E["🏢 Enterprise Agent<br/>Platforms<br/><small>2026</small>"]
+    style A fill:#6366f1,color:#fff,stroke:none
+    style B fill:#7c5ce6,color:#fff,stroke:none
+    style C fill:#a855f7,color:#fff,stroke:none
+    style D fill:#c026d3,color:#fff,stroke:none
+    style E fill:#db2777,color:#fff,stroke:none
 ```
 
 Most people learn this ladder as a timeline. That's the shallow version. The deep version is that each rung is a *response to a named architectural limitation* of the rung below — and once you can name the limitation, three things follow: you can explain *why* the industry moved (not just that it did), you can predict what the next rung must fix, and most importantly you can **place any use case on the correct rung** instead of defaulting to the newest one. The ladder is not a maturity scale where higher is better. It is a placement decision per use case, and placement is the first thing this chapter teaches you to defend.
@@ -34,8 +43,16 @@ These three failures share a root: **the model is the entire system, and a model
 
 RAG's move was to **separate knowledge from the model**. Instead of hoping knowledge lives in the weights, put it in a retrieval layer and inject it into the context window at query time:
 
-```text
-Query → Embed → Retrieve top-k chunks → Stuff into context → Generate → Answer
+```mermaid
+flowchart LR
+    Q["🔍 Query"] --> EM["🧮 Embed"]
+    EM --> R["📥 Retrieve<br/>top-k chunks"]
+    R --> S["📦 Stuff into<br/>context"]
+    S --> G["🧠 Generate"]
+    G --> A["✅ Answer"]
+    style Q fill:#4f46e5,color:#fff,stroke:none
+    style G fill:#7c3aed,color:#fff,stroke:none
+    style A fill:#059669,color:#fff,stroke:none
 ```
 
 Walk the pipeline once concretely. Your policy documents are split into chunks and embedded into vectors offline. At query time, "what's the foreclosure charge on my home loan?" is embedded too; the nearest chunks — hopefully the foreclosure section of the housing-loan policy — are retrieved and pasted into the prompt above the question, with instructions to answer *from the provided context*. Now the model isn't asked to know anything; it's asked to *read*. Knowledge updates by re-indexing a document, not retraining a model. Answers can cite sources. Two of Gen 1's three failures — frozen knowledge, no access — fall immediately, and the third (hallucination) is reduced because generation is grounded in retrieved text.

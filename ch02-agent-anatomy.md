@@ -4,19 +4,21 @@
 
 ## 1. The architecture
 
-```text
-                ┌─────────────┐
-                │    GOAL     │
-                └──────┬──────┘
-                       ▼
-        ┌───────────────────────────┐
-        │        AGENT LOOP         │
-        │  reason → plan → select   │
-        │  tool → act → observe →   │
-        │  reflect → (repeat/stop)  │
-        └──────┬──────────┬─────────┘
-               ▼          ▼          ▼
-            MEMORY      TOOLS     KNOWLEDGE
+```mermaid
+flowchart TD
+    GOAL(["🎯 GOAL"]) --> LOOP
+    subgraph LOOP["🔁 AGENT LOOP"]
+        direction LR
+        R1["Reason"] --> P1["Plan"] --> S1["Select Tool"] --> AC["Act"] --> OB["Observe"] --> RF["Reflect"]
+        RF -. repeat/stop .-> R1
+    end
+    LOOP --> MEM[("🗂️ Memory")]
+    LOOP --> TOOLS[("🛠️ Tools")]
+    LOOP --> KNOW[("📚 Knowledge")]
+    style GOAL fill:#4f46e5,color:#fff,stroke:none
+    style MEM fill:#0f766e,color:#fff,stroke:none
+    style TOOLS fill:#b45309,color:#fff,stroke:none
+    style KNOW fill:#7c3aed,color:#fff,stroke:none
 ```
 
 The loop is the agent. Memory, tools, and knowledge are what it consults or manipulates — each gets its own chapter later (9, 13, 10–12). This chapter earns you the right to say, in any design review or interview, "I know exactly what happens on every turn, and I know which parts are the model and which parts are my software." That sentence is rarer than it should be.

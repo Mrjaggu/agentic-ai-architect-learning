@@ -4,25 +4,22 @@
 
 ## 1. The architecture
 
-```text
-              ┌─────────┐
-              │  START  │
-              └────┬────┘
-                   ▼
-              ┌─────────┐
-              │CLASSIFY │
-              └────┬────┘
-        ┌──────────┼──────────┐
-        ▼          ▼          ▼
-     Search      Action    Analysis
-        │          │          │
-        └──────────┼──────────┘
-                   ▼
-              ┌─────────┐
-              │VALIDATE │──fail──► retry / escalate
-              └────┬────┘
-                   ▼
-                  END
+```mermaid
+flowchart TD
+    START(["START"]) --> CLASSIFY["CLASSIFY"]
+    CLASSIFY --> Search
+    CLASSIFY --> Action
+    CLASSIFY --> Analysis
+    Search --> VALIDATE{"VALIDATE"}
+    Action --> VALIDATE
+    Analysis --> VALIDATE
+    VALIDATE -->|fail| RETRY["retry / escalate"]
+    VALIDATE -->|pass| DONE(["END"])
+    RETRY -.bounded loop.-> CLASSIFY
+    style START fill:#4f46e5,color:#fff,stroke:none
+    style DONE fill:#059669,color:#fff,stroke:none
+    style VALIDATE fill:#b45309,color:#fff,stroke:none
+    style RETRY fill:#be123c,color:#fff,stroke:none
 ```
 
 Instead of `Agent → Agent → Agent` or an unbounded ReAct loop, model the system as a **stateful graph**. Nodes do work (call a model, run a tool, run plain code). Edges define legal transitions. **Conditional edges** route based on state — the router can be a rule (`if score < 0.7`) or a model decision (Ch3's owner-of-control-flow question, asked per edge). **State** is a typed, shared object every node reads and writes — not a chat transcript.

@@ -33,19 +33,16 @@ The root cause was not the agent's reasoning — `check_policy` was correct both
 
 Agent workloads are **long-running, asynchronous, iterative, and expensive to retry** — each property individually rules out the sync anti-pattern, and together they point at one shape: split the fast path from the slow path.
 
-```text
-Client ──► API (fast: validate, enqueue, return job_id)
-                 │
-                 ▼
-              QUEUE
-                 │
-                 ▼
-             WORKER (slow: runs the agent loop)
-                 │
-     progress events ──► stream to client
-                 │
-                 ▼
-        results + state store
+```mermaid
+flowchart TD
+    C["Client"] -->|"POST /jobs (ms)"| API["API<br/>validate, enqueue"]
+    API --> Q[("QUEUE")]
+    Q --> W["WORKER<br/>runs the agent loop"]
+    W -->|"progress events"| C
+    W --> ST[("results + state store")]
+    style API fill:#4f46e5,color:#fff,stroke:none
+    style W fill:#7c3aed,color:#fff,stroke:none
+    style Q fill:#b45309,color:#fff,stroke:none
 ```
 
 ## 4. The components — and what each one specifically prevents
