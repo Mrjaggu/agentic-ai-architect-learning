@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <style>
 :root {
   --bg: #0d0f14;
@@ -297,7 +298,7 @@ aside.sidebar {
 /* Main Content Area */
 main.content-area {
   flex: 1;
-  max-width: 920px;
+  max-width: 940px;
   margin: 0 auto;
   padding: 36px 40px 120px;
   width: 100%;
@@ -379,6 +380,36 @@ main.content-area {
   border-radius: 6px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.88em;
+}
+
+/* Visual Diagram Card */
+.visual-diagram-card {
+  background: var(--panel);
+  border: 1px solid var(--accent-hover);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 24px 0;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.diagram-badge {
+  align-self: flex-start;
+  background: var(--accent-light);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+.visual-diagram-card .mermaid {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 /* Code Blocks with Header Bar */
@@ -635,6 +666,11 @@ main.content-area {
   </aside>
 
   <main class="content-area">
+    <div class="chapter-meta-bar" id="chapterMetaBar">
+      <span id="readTime">⏱️ ~5 min read</span>
+      <button id="toggleCompleteBtn">Mark as Completed</button>
+    </div>
+    
     <div class="chapter-meta-bar" id="chapterMetaBar">
       <span id="readTime">⏱️ ~5 min read</span>
       <button id="toggleCompleteBtn">Mark as Completed</button>
@@ -2947,6 +2983,7 @@ Graded — per-agent (revoke identity), per-integration (gateway), platform-wide
 <p>Read the six cases together and one shape repeats: <strong>classify → route → deterministic where possible → agentic where necessary → graph/semantic layer for structure and explainability → cache the head of the distribution → bound and observe everything.</strong> That is precisely the reference architecture of Ch21 — which is the point: the curriculum isn't a theory of how this <em>should</em> work; it's a description of how the systems that work <em>do</em>.</p>
 <h2>Lab (capstone-level)</h2>
 <p>Recreate selective agency on your banking platform: add a complexity classifier in front of the Ch12 router, serve the simple 70% via cached/workflow paths, and measure — latency, cost per query, and answer quality across both paths. Present it Walmart-style: one number for leadership ("X% latency/cost reduction, quality flat or up"), one architecture diagram for engineers.</p></section>
+  
   </main>
 </div>
 
@@ -2968,6 +3005,19 @@ Graded — per-agent (revoke identity), per-integration (gateway), platform-wide
 </div>
 
 <script>
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'dark',
+  themeVariables: {
+    fontFamily: 'Inter, sans-serif',
+    primaryColor: '#6366f1',
+    primaryTextColor: '#ffffff',
+    lineColor: '#818cf8',
+    secondaryColor: '#1e1b4b',
+    tertiaryColor: '#171b26'
+  }
+});
+
 const META = [
   {"label": "Overview", "title": "Curriculum Overview", "module": "Foundations"},
   {"label": "Ch 1", "title": "The Evolution of AI Systems", "module": "Module A — Foundations"},
@@ -3103,7 +3153,14 @@ function show(i, push) {
 
   if (push !== false) location.hash = cur === 0 ? 'overview' : 'ch' + String(cur).padStart(2, '0');
   window.scrollTo(0, 0);
-  
+
+  // Re-run Mermaid rendering for current visible section
+  try {
+    mermaid.init(undefined, currentSec.querySelectorAll('.mermaid'));
+  } catch (err) {
+    console.log('Mermaid init:', err);
+  }
+
   // Close sidebar on mobile
   document.getElementById('sidebar').classList.remove('open');
 }
@@ -3122,6 +3179,7 @@ window.addEventListener('hashchange', () => show(fromHash(), false));
 // Wrap Code blocks with Copy Buttons
 secs.forEach(sec => {
   sec.querySelectorAll('pre').forEach(pre => {
+    if (pre.classList.contains('mermaid')) return;
     const parent = pre.parentNode;
     if (parent.classList.contains('code-container')) return;
 
