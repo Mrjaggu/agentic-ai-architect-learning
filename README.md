@@ -29,6 +29,27 @@ Throughout the chapters, we build and refine one evolving design: **"An Enterpri
 
 ---
 
+## 🗂️ Repository Structure
+
+```
+index.html                # Built reader -- what GitHub Pages serves
+Agentic-AI-Reader.html    # Identical copy, for opening locally/offline
+chapters/                 # All 23 chapters + the curriculum index (source of truth, plain Markdown)
+  00-CURRICULUM.md
+  ch01-evolution.md
+  ...
+  ch23-case-study.md
+reader/                   # Build tooling for the interactive reader
+  build_reader_v2.py      # python3 reader/build_reader_v2.py regenerates index.html
+  reader-base.css
+  reader-shell.js
+.github/workflows/        # Auto-deploys index.html to GitHub Pages on push to main
+```
+
+Read the chapters as plain Markdown right here on GitHub, or open the built reader above for diagrams, search, and progress tracking.
+
+---
+
 ## 📚 Curriculum Modules
 
 ### 🧱 Module A — Foundations & Agent Design

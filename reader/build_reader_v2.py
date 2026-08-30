@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 """
 Build script v2 for the Agentic AI Architect reader.
+
+Layout: this file lives in reader/, chapter markdown lives in chapters/,
+both siblings of the repo root. Run from anywhere as:
+    pip install markdown beautifulsoup4
+    python3 reader/build_reader_v2.py
+Output (index.html, Agentic-AI-Reader.html) is always written to the repo
+root, since that's what GitHub Pages serves.
 Reuses the existing enhanced shell (sidebar, search, theme toggle, progress
 tracking, Mermaid infra) extracted from the current index.html, and fixes/adds:
   - removes the duplicated chapter-meta-bar (the "two 5 min read" bug)
@@ -22,7 +29,12 @@ import re
 import markdown
 from bs4 import BeautifulSoup, NavigableString
 
-WORKDIR = "/home/claude/work"
+# Repo layout: this script lives in reader/, chapter markdown lives in
+# chapters/, both siblings of the repo root where index.html is published
+# (GitHub Pages serves the root, so the built HTML must land there).
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(SCRIPT_DIR)
+CHAPTERS_DIR = os.path.join(REPO_ROOT, "chapters")
 
 CHAPTER_ORDER = [
     ("00-CURRICULUM.md", "Overview", "Curriculum Overview", "Foundations"),
@@ -82,7 +94,7 @@ BIO_CARD = """<div class="bio-card" style="background:var(--panel);border:1px so
 
 
 def find_chapter_file(pattern_name):
-    p = os.path.join(WORKDIR, pattern_name)
+    p = os.path.join(CHAPTERS_DIR, pattern_name)
     if os.path.exists(p):
         return p
     matches = glob.glob(p)
@@ -196,12 +208,12 @@ def chapter_to_html(md_path, extra_prefix_html=None):
 
 
 def build():
-    with open(f"{WORKDIR}/reader-src/reader-base.css", "r", encoding="utf-8") as f:
+    with open(f"{SCRIPT_DIR}/reader-base.css", "r", encoding="utf-8") as f:
         orig_css = f.read()
     orig_css_body = orig_css.split("\n", 1)[1]  # drop leading "<style>" line
     orig_css_body = re.sub(r"</style>\s*$", "", orig_css_body.rstrip())  # drop trailing "</style>" line
 
-    with open(f"{WORKDIR}/reader-src/reader-shell.js", "r", encoding="utf-8") as f:
+    with open(f"{SCRIPT_DIR}/reader-shell.js", "r", encoding="utf-8") as f:
         orig_script = f.read()  # full "<script>...</script>"
 
     # Fix the read-time / word-count calc to ignore diagram content, and skip
@@ -444,9 +456,9 @@ ul.interview-list li::before {
 </html>
 """
 
-    with open(f"{WORKDIR}/index.html", "w", encoding="utf-8") as f:
+    with open(f"{REPO_ROOT}/index.html", "w", encoding="utf-8") as f:
         f.write(doc)
-    with open(f"{WORKDIR}/Agentic-AI-Reader.html", "w", encoding="utf-8") as f:
+    with open(f"{REPO_ROOT}/Agentic-AI-Reader.html", "w", encoding="utf-8") as f:
         f.write(doc)
 
     print("Built", len(doc), "bytes;", len(CHAPTER_ORDER), "sections")
