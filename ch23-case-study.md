@@ -97,6 +97,7 @@ The architect's lesson to quote in interviews: **the biggest documented wins com
 - **Syntes AI** (enterprise digital twin): graph + Cypher translation with logging and approvals — Ch11 explainability + Ch20 governed actions.
 - **Mem0** (memory layer): graph-based selective memory extraction cutting token usage across long workflows — Ch9's pipeline as a product.
 - **Kambui Nurse** (tech-debt agent): deterministic Cypher over an ephemeral graph in CI, exposed via MCP — reliability by *removing* LLM inference from the load-bearing step; the Ch1 dial pushed deliberately left.
+- **OpenAI — Codex building an internal product**: ~1M lines of code and ~1,500 PRs, zero hand-written, three engineers at 3.5 PRs/day — the Ch5 harness-as-infrastructure argument proven at a lab's own engineering org, and a live example (their own "minimal blocking gates" call) of exactly where a bank's gate placement has to diverge from theirs.
 
 ## The meta-pattern across every case
 
