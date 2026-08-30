@@ -2,8 +2,6 @@
 
 > Put a frontier model into a badly designed agent system and you get a more articulate failure. The harness — not the model — is where reliability lives.
 
-*Source: Karan Shingde, "System Design for Agent Systems (Part 1)," AI That Ships.*
-
 ## 1. The architecture
 
 ```mermaid

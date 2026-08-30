@@ -2,8 +2,6 @@
 
 > A green pipeline is not proof. Nothing before a real job ever calls the model.
 
-*Source: Karan Shingde, "Deployment of Agent Systems to AWS ECS (Part 3)," AI That Ships.*
-
 ## 1. The deployment shape
 
 The Ch6 fast-path/slow-path split, made physical — three containers on ECS/Fargate behind a load balancer:

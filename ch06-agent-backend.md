@@ -2,8 +2,6 @@
 
 > A web app answers in milliseconds. An agent thinks for minutes. That one difference drives the entire backend design.
 
-*Source: Karan Shingde, "Designing the Backend for Agent Systems (Part 2)," AI That Ships.*
-
 ## 1. The anti-pattern everyone writes first
 
 ```python
