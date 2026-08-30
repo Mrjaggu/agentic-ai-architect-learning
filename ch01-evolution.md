@@ -139,7 +139,14 @@ The heuristic: **choose the lowest rung that solves the problem** — cost, late
 
 The pattern across all three: the sentence that justifies placement always has the same shape — *"control flow here needs to be owned by X, because Y, and that costs us Z."* Learn the sentence shape; it's the most reusable artifact in this chapter.
 
-**Where agents should not be used** — worth stating as a list you can recite: fixed-sequence compliance processes (the sequence is the point), hard-latency paths (payments authorization — the loop's variance is disqualifying), high-volume/low-value queries (cost per query dominates), and anywhere the decision must be *exactly* replayable rather than merely explainable. And a hybrid note: real systems mix rungs freely — a workflow whose step 3 is an agent, an agent whose sub-tasks are pipelines. The ladder classifies *decision points*, not whole products.
+**Where agents should not be used** — worth stating as a list you can recite:
+
+- **Fixed-sequence compliance processes** — the sequence is the point; adaptivity is a defect here, not a feature.
+- **Hard-latency paths** (e.g. payments authorization) — the loop's variance is disqualifying.
+- **High-volume/low-value queries** — cost per query dominates, and a fixed or cached path is cheaper at the same quality.
+- **Anywhere the decision must be *exactly* replayable**, not merely explainable.
+
+And a hybrid note: real systems mix rungs freely — a workflow whose step 3 is an agent, an agent whose sub-tasks are pipelines. The ladder classifies *decision points*, not whole products.
 
 ## 8. How the industry actually moved (the timeline you can cite)
 

@@ -115,7 +115,9 @@ Six lines of logic — everything else in this curriculum is engineering wrapped
 
 ## 9. Trade-offs
 
-More reflection buys better outcomes on hard tasks, and costs linearly: a 10-turn loop at 5k context tokens per turn re-sends context ten times — a different cost class from a single call, before reasoning-model premiums (mitigations: Ch8's compression, Ch18's caching and routing). Implicit ReAct planning is adaptive but audit-hostile; explicit plans are auditable but stale-prone. Wider tool grants raise capability *and* wrong-tool selection rates (measured in Ch17's tool evals) — grant narrowly, expand with evidence.
+- **More reflection buys better outcomes on hard tasks, and costs linearly.** A 10-turn loop at 5k context tokens per turn re-sends context ten times — a different cost class from a single call, before reasoning-model premiums (mitigations: Ch8's compression, Ch18's caching and routing).
+- **Implicit ReAct planning is adaptive but audit-hostile**; explicit plans are auditable but stale-prone.
+- **Wider tool grants raise capability *and* wrong-tool selection rates** (measured in Ch17's tool evals) — grant narrowly, expand with evidence.
 
 ## 10. Architect's take: the banking read
 

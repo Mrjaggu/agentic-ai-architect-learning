@@ -63,7 +63,11 @@ Deterministic policy, intelligent content — and every call's composition is lo
 
 ## 6. Trade-offs
 
-Every compression is a lossy bet — you will occasionally cut the fact that mattered. Mitigate with retrieval-over-state: keep everything in the store, compress the *view*, and let the agent fetch back detail via a tool rather than trying to guess up front exactly which detail will matter. Aggressive isolation costs integration quality: sub-agents that return over-distilled results starve the parent — a policy-verification sub-agent that returns only "approved" with no clause reference gives the parent nothing to cite if a customer later disputes the outcome. Freshness filtering has its own trade-off: too strict a staleness threshold and you prune documents that are still valid, starving the agent of legitimate context; too loose and §2's incident recurs. Tune all three with traces, not intuition — the right threshold is an empirical question, answered by looking at what actually got pruned and whether the agent's downstream decisions changed.
+- **Compression is a lossy bet.** You will occasionally cut the fact that mattered. Mitigate with retrieval-over-state: keep everything in the store, compress the *view*, and let the agent fetch back detail via a tool rather than trying to guess up front exactly which detail will matter.
+- **Aggressive isolation costs integration quality.** Sub-agents that return over-distilled results starve the parent — a policy-verification sub-agent that returns only "approved" with no clause reference gives the parent nothing to cite if a customer later disputes the outcome.
+- **Freshness filtering has its own trade-off.** Too strict a staleness threshold and you prune documents that are still valid, starving the agent of legitimate context; too loose and §2's incident recurs.
+
+Tune all three with traces, not intuition — the right threshold is an empirical question, answered by looking at what actually got pruned and whether the agent's downstream decisions changed.
 
 ## 7. Industry implementation
 
@@ -79,7 +83,13 @@ Context assembly is also a *data-governance* control point: it is exactly where 
 
 ## Governance & security lens
 
-The context assembler is a data-governance chokepoint: it is where purpose limitation is enforced (only task-relevant fields enter the window), where PII is masked, where retrieved content gets trust and freshness labels that downstream policy keys off, and where "what did the model see?" becomes answerable — log context composition or forfeit the ability to investigate incidents like §2's stale-policy waiver. Governing questions: **can we state, for any run, exactly what customer data entered the window and under what entitlement; can we state whether every policy-relevant document shown was current as of that run; and can untrusted content ever trigger a mutating action without a human?** If any of these three answers isn't a structural "yes" (or a structural "no" for the third), you're running on luck rather than a control.
+The context assembler is a data-governance chokepoint: it is where purpose limitation is enforced (only task-relevant fields enter the window), where PII is masked, where retrieved content gets trust and freshness labels that downstream policy keys off, and where "what did the model see?" becomes answerable — log context composition or forfeit the ability to investigate incidents like §2's stale-policy waiver. Governing questions:
+
+- Can we state, for any run, exactly what customer data entered the window and under what entitlement?
+- Can we state whether every policy-relevant document shown was current as of that run?
+- Can untrusted content ever trigger a mutating action without a human?
+
+If any of these three answers isn't a structural "yes" (or a structural "no" for the third), you're running on luck rather than a control.
 
 ## Interview-ready lines
 

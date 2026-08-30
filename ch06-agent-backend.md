@@ -88,9 +88,10 @@ Trace the duplicate-refund incident through this code: the mobile app's retry ar
 
 ## 7. Trade-offs
 
-The async architecture costs you: more moving parts (a queue is a new operational dependency with its own failure modes), eventual consistency in UX ("queued… running…" instead of an instant answer), and an operational surface to monitor (queue depth, worker health, dead-letter handling for jobs that fail repeatedly). It buys you: survivable disconnects, resumable failures, backpressure, cancellation, and honest progress — and, per §2, it closes an entire class of duplicate-side-effect bugs that no amount of careful prompt engineering can close from the model side. For anything beyond a demo that never touches a real side effect, the trade is not close: the moment an agent can issue a refund, block a card, or send a message a human will read, the sync anti-pattern is a standing liability, not a shortcut.
-
-The one real counter-case: a genuinely short, read-only, side-effect-free agent call (e.g., "summarize this document" with no tool calls) can reasonably stay synchronous — the async machinery's cost isn't worth paying for a call with nothing to retry into a duplicate. The dividing line is the same one Chapter 1 uses for "is this even an agent": does this call touch state or trigger a side effect anyone would care about happening twice? If not, a plain synchronous endpoint is honest and correct.
+- **What it costs.** More moving parts (a queue is a new operational dependency with its own failure modes), eventual consistency in UX ("queued… running…" instead of an instant answer), and an operational surface to monitor (queue depth, worker health, dead-letter handling for jobs that fail repeatedly).
+- **What it buys.** Survivable disconnects, resumable failures, backpressure, cancellation, and honest progress — and, per §2, it closes an entire class of duplicate-side-effect bugs that no amount of careful prompt engineering can close from the model side.
+- **When the trade isn't close.** For anything beyond a demo that never touches a real side effect: the moment an agent can issue a refund, block a card, or send a message a human will read, the sync anti-pattern is a standing liability, not a shortcut.
+- **The one real counter-case.** A genuinely short, read-only, side-effect-free agent call (e.g., "summarize this document" with no tool calls) can reasonably stay synchronous — the async machinery's cost isn't worth paying for a call with nothing to retry into a duplicate. The dividing line is the same one Chapter 1 uses for "is this even an agent": does this call touch state or trigger a side effect anyone would care about happening twice? If not, a plain synchronous endpoint is honest and correct.
 
 ## 8. Industry implementation
 
@@ -114,7 +115,13 @@ Bank infrastructure reviews will ask exactly these questions — timeout behavio
 
 ## Governance & security lens
 
-The job system is an audit and safety layer, not just plumbing: every job records who submitted it, under what identity, with what outcome — the queue is a ledger. Idempotency keys are a *customer-protection* control (a network retry must never duplicate a real-world action, as §2's refund incident shows concretely); per-tenant quotas and backpressure are availability controls; cancellation is the operational kill lever for a single run. Governing questions: **can we reconstruct any job end-to-end from records, are all payloads encrypted in transit and at rest, and does a replayed message ever cause a second side effect?** That last question isn't rhetorical — it's the exact test that would have caught §2's bug in a design review, before it reached a customer.
+The job system is an audit and safety layer, not just plumbing: every job records who submitted it, under what identity, with what outcome — the queue is a ledger. Idempotency keys are a *customer-protection* control (a network retry must never duplicate a real-world action, as §2's refund incident shows concretely); per-tenant quotas and backpressure are availability controls; cancellation is the operational kill lever for a single run. Governing questions:
+
+- Can we reconstruct any job end-to-end from records?
+- Are all payloads encrypted in transit and at rest?
+- Does a replayed message ever cause a second side effect?
+
+That last question isn't rhetorical — it's the exact test that would have caught §2's bug in a design review, before it reached a customer.
 
 ## Interview-ready lines
 

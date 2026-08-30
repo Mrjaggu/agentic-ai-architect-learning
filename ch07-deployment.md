@@ -121,7 +121,13 @@ Every pattern here has a bank-grade name your infra teams already use: OIDC = fe
 
 ## Governance & security lens
 
-This chapter is largely made of controls — name them as such: OIDC = no standing cloud credentials to steal; task roles = least privilege enforced by the platform; approval gates = change management; the plan-never-in-artifacts rule = secrets hygiene; budget alarms = financial control; teardown order = state integrity. Governing questions: **who can assume the deploy role and from which branches/environments, who approves prod, and is every deployment attributable to a commit, a pipeline run, and a person?** Infrastructure-as-code makes the whole answer reviewable — which is *why* IaC is a governance requirement, not a convenience.
+This chapter is largely made of controls — name them as such: OIDC = no standing cloud credentials to steal; task roles = least privilege enforced by the platform; approval gates = change management; the plan-never-in-artifacts rule = secrets hygiene; budget alarms = financial control; teardown order = state integrity. Governing questions:
+
+- Who can assume the deploy role, and from which branches/environments?
+- Who approves prod?
+- Is every deployment attributable to a commit, a pipeline run, and a person?
+
+Infrastructure-as-code makes the whole answer reviewable — which is *why* IaC is a governance requirement, not a convenience.
 
 ## Interview-ready lines
 

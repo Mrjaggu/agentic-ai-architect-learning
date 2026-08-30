@@ -72,7 +72,13 @@ Everything the governance sections below demand is a *field*, not a hope. Trace 
 
 ## 7. Learning and adaptation — memory's active cousin
 
-Memory stores; **learning changes future behavior**. Without touching model weights, agent systems adapt through: **procedural memory** — successful resolutions distilled into playbooks the agent retrieves ("last 5 KYC-exception cases resolved via steps X-Y-Z"); **feedback incorporation** — HITL corrections (Ch20) and eval outcomes (Ch17) written back as do/don't exemplars, making the traces→evals flywheel also a traces→behavior flywheel; **self-reflection** — post-run critique ("what would I do differently?") stored and retrieved for similar future tasks (the Reflection pattern, Ch3, pointed at the long term). The governance catch, and it's the same lesson §2 taught the hard way: a system that adapts is a system that *drifts* — learned content needs the same provenance, review thresholds, and rollback as any memory write, and in a bank, a changed behavior needs a traceable cause (an MRM expectation, Ch20). Design learning as versioned, reviewable memory — never as silent accumulation, because silent accumulation is exactly the mechanism that let one false-positive inference become eight months of unexamined institutional behavior.
+Memory stores; **learning changes future behavior**. Without touching model weights, agent systems adapt through:
+
+- **Procedural memory** — successful resolutions distilled into playbooks the agent retrieves ("last 5 KYC-exception cases resolved via steps X-Y-Z").
+- **Feedback incorporation** — HITL corrections (Ch20) and eval outcomes (Ch17) written back as do/don't exemplars, making the traces→evals flywheel also a traces→behavior flywheel.
+- **Self-reflection** — post-run critique ("what would I do differently?") stored and retrieved for similar future tasks (the Reflection pattern, Ch3, pointed at the long term).
+
+The governance catch, and it's the same lesson §2 taught the hard way: a system that adapts is a system that *drifts* — learned content needs the same provenance, review thresholds, and rollback as any memory write, and in a bank, a changed behavior needs a traceable cause (an MRM expectation, Ch20). Design learning as versioned, reviewable memory — never as silent accumulation, because silent accumulation is exactly the mechanism that let one false-positive inference become eight months of unexamined institutional behavior.
 
 ## 8. Why bad memory is worse than no memory
 
@@ -80,7 +86,13 @@ Wrong personalization (acting on stale or misattributed facts) destroys trust fa
 
 ## 9. Industry implementation
 
-Consumer assistants (ChatGPT memory, Claude memory) converge on: explicit extraction with user visibility, editable/deletable stores, and category exclusions for sensitive data. Enterprise deployments add tenancy isolation and retention schedules. Notice the pattern: the mature implementations spend most of their design on *governance*, not recall quality — recall quality is the easy 80%; the governance surface (confidence thresholds, provenance, expiry, deletion) is the hard 20% that determines whether the system is safe to run on real customers, and it's exactly the 20% that was missing in §2.
+Consumer assistants (ChatGPT memory, Claude memory) converge on the same short list:
+
+- Explicit extraction with user visibility.
+- Editable/deletable stores.
+- Category exclusions for sensitive data.
+
+Enterprise deployments add tenancy isolation and retention schedules. Notice the pattern: the mature implementations spend most of their design on *governance*, not recall quality — recall quality is the easy 80%; the governance surface (confidence thresholds, provenance, expiry, deletion) is the hard 20% that determines whether the system is safe to run on real customers, and it's exactly the 20% that was missing in §2.
 
 ## 10. Hands-on lab
 
@@ -100,7 +112,23 @@ RBI/DPDP framing turns memory design into three enforceable statements: (1) purp
 
 ## Governance & security lens
 
-Memory is the layer where a governance failure *persists*: a stored inference, a cross-customer leak, or a poisoned memory outlives the session that created it — §2's fraud flag outlived it by eight months and fourteen interactions. The controls are structural, not procedural — allowlist extraction policy, confidence thresholds, purpose tags checked at retrieval, partition isolation, provenance on every record, TTLs, and erasure that cascades to derived artifacts. Governing questions: **can we show a regulator every memory held about a customer, why each was collected, and delete them provably; can any write reach memory without passing the policy; and does any inference that influenced a customer-facing decision carry a confidence score and an expiry?** (This chapter and Ch19/20 are where the lens originates; the summary here is the checklist.)
+Memory is the layer where a governance failure *persists*: a stored inference, a cross-customer leak, or a poisoned memory outlives the session that created it — §2's fraud flag outlived it by eight months and fourteen interactions. The controls are structural, not procedural:
+
+- Allowlist extraction policy.
+- Confidence thresholds.
+- Purpose tags checked at retrieval.
+- Partition isolation.
+- Provenance on every record.
+- TTLs.
+- Erasure that cascades to derived artifacts.
+
+Governing questions:
+
+- Can we show a regulator every memory held about a customer, why each was collected, and delete them provably?
+- Can any write reach memory without passing the policy?
+- Does any inference that influenced a customer-facing decision carry a confidence score and an expiry?
+
+(This chapter and Ch19/20 are where the lens originates; the summary here is the checklist.)
 
 ## Interview-ready lines
 

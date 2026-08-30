@@ -82,13 +82,21 @@ The model never sees this file — the harness enforces it around every request 
 
 ## 6. Trade-offs
 
-Harness rigor costs iteration speed early on. A team under demo pressure that spends the first sprint building bounds, sandboxing, and a full trace schema before shipping anything ships nothing in that sprint — and there's a real version of this critique that's correct: not every prototype needs seven layers on day one. The mature position from §5 holds: a thin harness from day one (bounds + tracing + tool policy — the three cheapest and most failure-preventing), thickened as traces reveal need. What's not defensible is the opposite failure — shipping *no* bounds at all because "we'll add it later" — because "later" in practice means "after the incident," and the notification storm's $9,000 lesson was cheap compared to what an unbounded `transfer_funds`-adjacent tool could cost under the same bug.
-
-The other trade-off worth naming: a shared harness (§5's "one harness, many agents") is a dependency every agent team now has. If the harness team is slow to add a new tool-policy feature, every downstream agent team waits. This is a real platform cost, and it's the same cost every internal platform team accepts in exchange for consistency — Chapter 21 covers how to structure that relationship so it doesn't become a bottleneck.
+- **The cost.** Harness rigor costs iteration speed early on. A team under demo pressure that spends the first sprint building bounds, sandboxing, and a full trace schema before shipping anything ships nothing in that sprint — and there's a real version of this critique that's correct: not every prototype needs seven layers on day one.
+- **The mature position.** From §5: a thin harness from day one (bounds + tracing + tool policy — the three cheapest and most failure-preventing), thickened as traces reveal need.
+- **What's not defensible.** Shipping *no* bounds at all because "we'll add it later" — because "later" in practice means "after the incident," and the notification storm's $9,000 lesson was cheap compared to what an unbounded `transfer_funds`-adjacent tool could cost under the same bug.
+- **The platform cost.** A shared harness (§5's "one harness, many agents") is a dependency every agent team now has. If the harness team is slow to add a new tool-policy feature, every downstream agent team waits — a real cost, and the same one every internal platform team accepts in exchange for consistency (Chapter 21 covers how to structure that relationship so it doesn't become a bottleneck).
 
 ## 7. Industry implementation
 
-The best-known harnesses in production today are coding agents (Claude Code, Codex-style systems, Cursor's agent mode) — study them as *harness* case studies, not as coding tools, because the discipline is identical: aggressive context management (Ch8, deciding what code the model sees this turn out of a codebase far larger than any context window), sandboxed execution (generated shell commands run in a contained environment, not the host machine), permission prompts at dangerous actions (deleting a file, running an unfamiliar command — the HITL pattern from §3's `block_card`, generalized), and everything traced (every file read, every command run, every edit, logged). The awesome-harness-engineering ecosystem on GitHub catalogs the emerging toolchain — trace formats, sandboxing libraries, policy engines — and the pattern worth noticing across all of it: every serious lab in 2026 invests more engineering hours in the harness than in prompt text. AWS Bedrock AgentCore's Runtime and Harness components (Ch7) are the managed-cloud answer to the same problem — buy the bounds/sandbox/trace layer instead of building it, at the cost of less control over its internals.
+The best-known harnesses in production today are coding agents (Claude Code, Codex-style systems, Cursor's agent mode) — study them as *harness* case studies, not as coding tools, because the discipline is identical:
+
+- **Aggressive context management** (Ch8) — deciding what code the model sees this turn out of a codebase far larger than any context window.
+- **Sandboxed execution** — generated shell commands run in a contained environment, not the host machine.
+- **Permission prompts at dangerous actions** — deleting a file, running an unfamiliar command; the HITL pattern from §3's `block_card`, generalized.
+- **Everything traced** — every file read, every command run, every edit, logged.
+
+The awesome-harness-engineering ecosystem on GitHub catalogs the emerging toolchain — trace formats, sandboxing libraries, policy engines — and the pattern worth noticing across all of it: every serious lab in 2026 invests more engineering hours in the harness than in prompt text. AWS Bedrock AgentCore's Runtime and Harness components (Ch7) are the managed-cloud answer to the same problem — buy the bounds/sandbox/trace layer instead of building it, at the cost of less control over its internals.
 
 ## 8. Hands-on lab
 
@@ -108,7 +116,13 @@ In a bank the harness is where policy becomes enforcement. "The agent won't do X
 
 ## Governance & security lens
 
-The harness is where policy stops being a request and becomes enforcement: grants, bounds, budgets, and sandbox rules live here as *data a risk team can review* without reading code, and violations fail closed. Governing questions: **who approves changes to the policy file, is it version-controlled with the same rigor as code, and does every enforcement decision (blocked tool, exhausted budget) land in the audit stream?** A harness whose policy can be changed by the same engineer who writes the agent, without review, is a control on paper only — separation of duties applies to configuration, not just money.
+The harness is where policy stops being a request and becomes enforcement: grants, bounds, budgets, and sandbox rules live here as *data a risk team can review* without reading code, and violations fail closed. Governing questions:
+
+- Who approves changes to the policy file?
+- Is it version-controlled with the same rigor as code?
+- Does every enforcement decision (blocked tool, exhausted budget) land in the audit stream?
+
+A harness whose policy can be changed by the same engineer who writes the agent, without review, is a control on paper only — separation of duties applies to configuration, not just money.
 
 ## Interview-ready lines
 
