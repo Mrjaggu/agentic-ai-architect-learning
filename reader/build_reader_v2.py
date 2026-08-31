@@ -66,6 +66,7 @@ CHAPTER_ORDER = [
 # (keyword-in-h2-text, css-class-suffix, icon, card-title-override-or-None)
 SECTION_RULES = [
     (r"governance\s*&?\s*security lens", "governance", "🛡️", "Governance & Security Lens"),
+    (r"interview questions\s*&?\s*answers", "qa", "🎤", "Interview Questions & Answers"),
     (r"interview-ready lines", "interview", "💬", "Interview-Ready Lines"),
     (r"architect'?s take", "architect", "🏦", None),
     (r"hands-on lab", "lab", "🧪", None),
@@ -283,6 +284,14 @@ def build():
 .section-interview  {
   border-left-color: #64748b;
   background: transparent;
+}
+.section-qa {
+  border-left-color: #0891b2;
+  background: transparent;
+}
+.section-qa .section-card-body p:has(> strong:only-child) {
+  color: #0891b2;
+  margin-bottom: 6px;
 }
 
 /* Interview-ready lines as quote chips */
