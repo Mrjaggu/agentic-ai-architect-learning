@@ -23,6 +23,7 @@ tracking, Mermaid infra) extracted from the current index.html, and fixes/adds:
 """
 import glob
 import html
+import json
 import os
 import re
 
@@ -374,9 +375,9 @@ ul.interview-list li::before {
         meta_entries.append(
             '  {"label": %s, "title": %s, "module": %s}'
             % (
-                repr(label).replace("'", '"'),
-                repr(title).replace("'", '"'),
-                repr(module).replace("'", '"'),
+                json.dumps(label, ensure_ascii=False),
+                json.dumps(title, ensure_ascii=False),
+                json.dumps(module, ensure_ascii=False),
             )
         )
 
@@ -384,9 +385,12 @@ ul.interview-list li::before {
     meta_js = "const META = [\n" + ",\n".join(meta_entries) + "\n];\n\n"
 
     # splice META into the script (replace the old META block)
+    # NOTE: repl is a function (not the raw string) so backslash sequences
+    # inside meta_js (e.g. a literal "\n" that could appear in JSON-escaped
+    # text) are never interpreted as regex backreferences by re.sub.
     orig_script = re.sub(
         r"const META = \[.*?\];\n\n",
-        meta_js,
+        lambda _m: meta_js,
         orig_script,
         count=1,
         flags=re.DOTALL,
