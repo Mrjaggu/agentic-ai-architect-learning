@@ -98,7 +98,28 @@ Prompt injection, tool poisoning, data exfiltration, excessive autonomy — anch
 The autonomy ladder (assist → suggest → execute-with-approval → autonomous) and how to assign levels per action class (read customer data vs generate recommendation vs move money). Approval workflows, audit trails, model risk management — including RBI's FREE-AI framework (Aug 2025) and the 2026 draft Model Risk Management guidance (board-level MRMF, AI kill switches, third-party accountability) as the concrete regulatory anchor, plus DPDP and EU AI Act awareness.
 
 ### Chapter 21: The Enterprise Agentic AI Reference Architecture
-The capstone. Layered architecture — Experience → Agent → Orchestration → Knowledge → Tools → Enterprise systems — with cross-cutting security, observability, evals, governance, and cost. Deliverable: a polished reference-architecture document + diagram set you can use in interviews and internal architecture forums.
+The capstone. Layered architecture — Experience → Agent → Orchestration → Knowledge → Tools → Enterprise systems — with cross-cutting security, observability, evals, governance, and cost. Deliverable: a polished reference-architecture document + diagram set you can use in interviews and internal architecture forums. Extended with the Model Gateway, Agent Gateway, multi-tenancy, and agent lifecycle management as named platform capabilities, and an Agent Runtime layer diagram (Request → Context Builder → Policy Engine → Agent Runtime → Tool Execution → State Store → Checkpoint).
+
+---
+
+## Module G — The Architect's Toolkit
+
+Where Module F closes the build (the platform, governed), Module G is the reference material an architect reaches for once the platform exists: how to choose between models, how systems actually fail and what to do about it, how coordination scales past a handful of agents, how to defend a design choice, and how to read a fast-moving ecosystem without the course going stale.
+
+### Chapter 24: Model Strategy & Multi-Model Architecture
+Models as a portfolio, not one interchangeable choice. Model routing, multi-model architecture, fallback models, small-vs-large and cost-vs-quality-vs-latency trade-offs, open-source vs closed, self-hosted vs API, and RBI data-residency implications for a regulated bank.
+
+### Chapter 25: How Agentic Systems Fail
+The unified failure taxonomy — reasoning, tool, context/memory, coordination, and infrastructure failures — indexing every failure story already told across Ch5/6/8/9/10/15/18 into one catalog with its mitigation pattern (retry, circuit breaker, timeout, fallback, graceful degradation, kill switch), plus the modes that don't have a home yet: wrong tool selection, agent disagreement, and cascading multi-agent failure.
+
+### Chapter 26: Distributed Agent Systems
+What changes when agents span independently-deployed services and teams instead of one backend (Ch6) or a small orchestrated set (Ch15): event-driven coordination, distributed state, message queues and event buses, saga patterns, and eventual consistency.
+
+### Chapter 27: Architecture Decision Frameworks
+The architect-vs-developer distinction, made explicit: nine "when do I use X vs Y" decisions (Workflow vs Agent, Single vs Multi-Agent, RAG vs GraphRAG, Vector DB vs Knowledge Graph, SQL vs Vector Retrieval, MCP vs API, Sync vs Async, Stateless vs Stateful, Short- vs Long-term Memory), each a table and a committed verdict cross-linked to where the full reasoning already lives — plus a Reference Architecture Pattern Gallery indexing the eight architecture diagrams already drawn across the course.
+
+### Chapter 28: The 2026 Agentic AI Ecosystem
+A consolidated technology-landscape map — orchestration, multi-agent frameworks, observability, evals, knowledge/retrieval, and protocol tooling — explicitly framed as the fastest-aging chapter in the course: technologies are examples, the concepts taught everywhere else are what's permanent.
 
 ---
 

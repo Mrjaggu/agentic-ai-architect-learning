@@ -61,6 +61,11 @@ CHAPTER_ORDER = [
     ("ch21-reference-architecture.md", "Ch 21", "Enterprise Reference Architecture", "Module F — Governance & Platform"),
     ("ch22-interview-qa.md", "Ch 22", "Interview Q&A Bank", "Module F — Governance & Platform"),
     ("ch23-case-study.md", "Ch 23", "End-to-End Case Studies", "Module F — Governance & Platform"),
+    ("ch24-model-strategy.md", "Ch 24", "Model Strategy & Multi-Model Architecture", "Module G — The Architect's Toolkit"),
+    ("ch25-failure-engineering.md", "Ch 25", "How Agentic Systems Fail", "Module G — The Architect's Toolkit"),
+    ("ch26-distributed-agent-systems.md", "Ch 26", "Distributed Agent Systems", "Module G — The Architect's Toolkit"),
+    ("ch27-decision-frameworks.md", "Ch 27", "Architecture Decision Frameworks", "Module G — The Architect's Toolkit"),
+    ("ch28-ecosystem-landscape.md", "Ch 28", "The 2026 Agentic AI Ecosystem", "Module G — The Architect's Toolkit"),
 ]
 
 # (keyword-in-h2-text, css-class-suffix, icon, card-title-override-or-None)
