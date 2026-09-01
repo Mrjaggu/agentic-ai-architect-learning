@@ -2,6 +2,8 @@
 
 > RAG didn't die when agents arrived — it became one knowledge source among several, and the bar for doing it well went up.
 
+> **Want to go deeper on RAG specifically?** This chapter covers what a banking-grade agent architect needs to know about retrieval — but if you want a focused, from-first-principles-to-production track purely on Retrieval-Augmented Generation, see **[The RAG Architect's Handbook](https://mrjaggu.github.io/RAG-learning/)** — 27 free lessons covering chunking, retrieval, and evaluation through to production architecture and interview prep.
+
 ## 1. The architecture
 
 ```mermaid
