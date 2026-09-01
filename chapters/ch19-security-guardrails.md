@@ -53,6 +53,38 @@ context_policy:
 
 Agents are **non-human identities** at scale — each needs: its own identity (never a shared service account), short-lived scoped credentials (the Ch7 task-role pattern generalized; workload identity, zero static keys), an owner (a human accountable for each agent), lifecycle management (provision → rotate → *decommission* — orphaned agent identities are the new orphaned service accounts), and delegation records ("agent A, on behalf of user U, for purpose P" travels with every call and lands in the audit log). Identity is also the kill switch's handle: revoke the identity, the agent stops everywhere (Ch20).
 
+## 3b. Delegation, RBAC/ABAC, and agent-to-agent identity
+
+Section 3's NHI is the agent's *own* identity — the credential it uses to authenticate to the gateway as itself. That is not the credential it uses to act on a customer's behalf, and conflating the two is how "the agent is never a super-user" quietly stops being true. The mechanic that keeps them separate is **token exchange** (OAuth 2.0's RFC 8693 pattern, or an internal equivalent): the agent presents its own workload-identity token plus the calling user's token to a token service, which mints a new, short-lived, narrowly scoped access token for that one call — carrying an `act` claim recording *who is acting* (the agent) and *on whose behalf* (the subject), which is exactly the delegation record from section 3 given a concrete, verifiable shape instead of a log line the agent could in principle omit. For the document-intake agent this looks like:
+
+```text
+doc-intake NHI (workload identity — long-lived, low-privilege, calls the gateway as itself)
+        │
+        ▼  token exchange: agent token + user token → delegated token
+   scope: create_case(dept=ops)   ttl: 5m   act: {agent: doc-intake, sub: user U}
+        │
+        ▼
+   create_case tool call — the delegated token IS the delegation record; it expires
+   whether or not anyone remembers to revoke it
+```
+
+The short TTL matters as much as the narrow scope: even an agent whose own NHI stays valid for months should never be holding a customer-scoped token for longer than the single task needs it.
+
+Scoping that delegated token is where **RBAC vs ABAC** stops being an academic distinction. RBAC is the right tool when the grant is the same for every instance of the role regardless of which call it is — "document-intake agent → `read_document`, `extract_fields`, `create_case(dept=ops)`" doesn't depend on which document or which customer, which is exactly why section 2b's blast-radius YAML is written as a flat role grant: it's cheap to state, cheap to review, and cheap to prove to a risk committee. It stops being sufficient the moment the correct grant depends on *who is calling and what's true right now* — "the agent may act on an account only if the requesting RM is assigned to it, only during business hours, and only below a transaction threshold" can't be encoded as a role without exploding into one role per RM per account per hour, so it has to be an attribute-based policy evaluated per call:
+
+```yaml
+policy: rm-agent-account-action
+effect: allow
+condition:
+  subject.assigned_accounts contains resource.account_id   # RM ↔ account attribute match
+  and environment.time_of_day in business_hours
+  and action.amount <= subject.txn_limit
+```
+
+In practice the two compose rather than compete: RBAC narrows *which tools exist* on the agent's grant (the same job section 2b's YAML does), and ABAC narrows *which rows, accounts, or time windows* a permitted tool call can actually touch. A document-intake agent is a clean RBAC case — its role doesn't vary call to call; an RM-facing servicing agent is a clean ABAC case — its role is the same for every RM, but the correct scope changes on every call.
+
+Agent-to-agent identity is where delegation has to survive a harder boundary. When the document-intake agent's output escalates a case to a fraud-review agent over A2A (Ch14 §3), the two agents are deliberately opaque to each other — no shared memory, no internal state — so identity can't be established by one agent inspecting the other; it's established through the Agent Card's declared identity and auth requirements, exactly as Ch14 describes. What crosses the call is not the fraud-review agent trusting the document-intake agent's say-so — it's the document-intake agent presenting *its own NHI plus the delegation record it is holding*, and the fraud-review agent's own gateway re-running the same token-exchange step to mint a fresh, further-scoped token for what its task actually needs. Ch14's Q8 makes the failure mode explicit — a cross-agent task must not get laundered into the receiving agent's own broader permissions — and the identity mechanics here are exactly how that's enforced rather than merely stated: each hop appends its own `act` entry to the delegation chain, so an auditor can walk from the original human all the way through every intermediate agent that touched the case.
+
 ## 4. Design decisions & trade-offs
 
 Guardrail strictness vs task success is a tunable, evaluable trade — red-team suites (Ch17) measure catch-rate while golden suites measure the false-positive tax; tune with both on the table. Defense-in-depth costs latency (input + output classifiers on every turn) — tier it by risk class: read-only internal Q&A gets lighter gates than anything mutating or customer-facing. And accept the residual: with injection unfixable, your objective is a *bounded blast radius* you can state — "worst case, a fully hijacked agent can do exactly X" — and X is set by grants, not by hope.
@@ -126,3 +158,7 @@ Least-privilege and sandboxing set the damage ceiling, but they don't make the a
 **Q12: This is a common one in practice — someone asks "can't you just tell the model in the system prompt not to follow instructions found in documents?" How do you answer that in an interview?**
 
 That's a request, not a fact, and the whole architecture in this chapter exists because requests fail under adversarial pressure — a sufficiently crafted injection can override, distract, or reframe a system-prompt instruction because both live in the same instruction-following channel the model can't cleanly partition. It might raise the bar and stop unsophisticated attempts, which is worth doing, but it's not something you can put a number on for a risk committee — you can't tell a regulator "the model was told not to" and call that a control. The answer that actually holds up is the one from section 7: restricting the agent in the prompt is a request, restricting it in identity, grants, and egress is a fact, and a bank's control framework is built to evaluate facts. So in an interview, I'd acknowledge the system-prompt instruction as a cheap, useful first layer, then immediately pivot to naming which deterministic controls are doing the real work — because that pivot is exactly what separates an engineer's answer from an architect's answer.
+
+**Q13: When would you scope an agent's tool access with RBAC versus ABAC, and how does that scoping interact with the delegated tokens the agent is calling with?**
+
+RBAC is the right default when a role's grant is identical across every call it makes — the document-intake agent's "read the document, extract fields, create a case for ops" doesn't vary by which document or which customer submitted it, so a flat role grant like the blast-radius YAML in section 2b is cheap to write, cheap to audit, and easy to defend to a risk committee. ABAC becomes necessary the moment the correct grant depends on runtime facts a role can't encode without exploding combinatorially — "the agent may only touch accounts the calling RM is assigned to, only during business hours, and only below a transaction threshold" is three independent attributes, not a role, and trying to model it as roles means one role per RM per account per hour. The two aren't a choice between one or the other in production: RBAC decides which tools an agent's grant exposes at all, and ABAC decides, per call, which specific rows or accounts a permitted tool is allowed to touch — the same two-layer shape as section 2b's tool grants plus Ch14's gateway-level user entitlement check. And critically, neither is just a config value the model has to respect — the policy evaluation happens when the delegated, short-lived token is minted via token exchange, so an ABAC condition that fails means the agent never receives a token scoped wide enough to attempt the call, the same "fact, not a request" property section 7 makes about grants generally.
