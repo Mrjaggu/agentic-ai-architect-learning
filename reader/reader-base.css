@@ -42,6 +42,7 @@ html.light {
 }
 
 * { box-sizing: border-box; }
+html { overflow-x: hidden; }
 body {
   margin: 0;
   background: var(--bg);
@@ -51,7 +52,16 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  overflow-x: hidden;
   transition: background 0.2s, color 0.2s;
+}
+
+/* Any embedded image or diagram never forces the page wider than its container */
+.chapter img,
+.chapter svg,
+.visual-diagram-card svg {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Scrollbar */
@@ -617,5 +627,30 @@ main.content-area {
   .mobile-toggle { display: block; }
   main.content-area { padding: 20px 20px 100px; }
   .search-btn span { display: none; }
+}
+
+/* Phone-width fix: the header (brand wordmark + badge + search hint + theme
+   toggle) is wider than its content-hiding rules above account for once the
+   viewport drops below ~520px, and overflows the screen horizontally. Trim
+   it down to icon-only + a bare search/theme button so nothing pushes past
+   the edge. */
+@media (max-width: 520px) {
+  header { padding: 8px 12px; gap: 8px; }
+  .brand-text { display: none; }
+  .brand-badge { display: none; }
+  .brand { gap: 4px; font-size: 1.3rem; }
+  .search-btn {
+    flex: 0 0 auto;
+    max-width: none;
+    padding: 8px 10px;
+  }
+  .search-btn kbd { display: none; }
+  main.content-area { padding: 16px 14px 100px; }
+  .chapter h1 { font-size: 1.65rem; }
+  .chapter h2 { font-size: 1.2rem; }
+  .chapter-meta-bar { flex-wrap: wrap; gap: 8px; }
+  .bottom-nav { padding: 10px 12px; gap: 6px; }
+  .bottom-nav .nav-btn-label { display: none; }
+  #posIndicator { font-size: 0.72rem !important; text-align: center; }
 }
 </style>

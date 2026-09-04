@@ -415,7 +415,7 @@ ul.interview-list li::before {
 <header>
   <button class="mobile-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">☰</button>
   <a href="#" class="brand">
-    ⚡ Agentic AI Architect
+    ⚡ <span class="brand-text">Agentic AI Architect</span>
     <span class="brand-badge">PRO</span>
   </a>
 
@@ -453,9 +453,9 @@ ul.interview-list li::before {
 </div>
 
 <div class="bottom-nav">
-  <button id="prevBtn">← Previous Chapter</button>
+  <button id="prevBtn">← <span class="nav-btn-label">Previous Chapter</span></button>
   <span id="posIndicator" style="font-size:0.88rem;color:var(--muted);font-weight:500;">Overview</span>
-  <button id="nextBtn">Next Chapter →</button>
+  <button id="nextBtn"><span class="nav-btn-label">Next Chapter</span> →</button>
 </div>
 
 <div class="modal-overlay" id="searchModal">
@@ -464,7 +464,7 @@ ul.interview-list li::before {
       🔍 <input type="text" id="searchInput" placeholder="Search chapters, topics, tools (e.g. MCP, LangGraph)..." autofocus />
     </div>
     <div class="search-results" id="searchResults">
-      <div style="padding:20px;text-align:center;color:var(--muted);font-size:0.9rem;">Type to start searching across all 23 chapters...</div>
+      <div style="padding:20px;text-align:center;color:var(--muted);font-size:0.9rem;">Type to start searching across all 28 chapters...</div>
     </div>
   </div>
 </div>

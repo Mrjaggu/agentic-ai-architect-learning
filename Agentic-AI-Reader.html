@@ -52,6 +52,7 @@ html.light {
 }
 
 * { box-sizing: border-box; }
+html { overflow-x: hidden; }
 body {
   margin: 0;
   background: var(--bg);
@@ -61,7 +62,16 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  overflow-x: hidden;
   transition: background 0.2s, color 0.2s;
+}
+
+/* Any embedded image or diagram never forces the page wider than its container */
+.chapter img,
+.chapter svg,
+.visual-diagram-card svg {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Scrollbar */
@@ -629,6 +639,31 @@ main.content-area {
   .search-btn span { display: none; }
 }
 
+/* Phone-width fix: the header (brand wordmark + badge + search hint + theme
+   toggle) is wider than its content-hiding rules above account for once the
+   viewport drops below ~520px, and overflows the screen horizontally. Trim
+   it down to icon-only + a bare search/theme button so nothing pushes past
+   the edge. */
+@media (max-width: 520px) {
+  header { padding: 8px 12px; gap: 8px; }
+  .brand-text { display: none; }
+  .brand-badge { display: none; }
+  .brand { gap: 4px; font-size: 1.3rem; }
+  .search-btn {
+    flex: 0 0 auto;
+    max-width: none;
+    padding: 8px 10px;
+  }
+  .search-btn kbd { display: none; }
+  main.content-area { padding: 16px 14px 100px; }
+  .chapter h1 { font-size: 1.65rem; }
+  .chapter h2 { font-size: 1.2rem; }
+  .chapter-meta-bar { flex-wrap: wrap; gap: 8px; }
+  .bottom-nav { padding: 10px 12px; gap: 6px; }
+  .bottom-nav .nav-btn-label { display: none; }
+  #posIndicator { font-size: 0.72rem !important; text-align: center; }
+}
+
 /* ============ v2 additions: section callout cards ============ */
 .section-card {
   border: 1px solid var(--border);
@@ -744,7 +779,7 @@ ul.interview-list li::before {
 <header>
   <button class="mobile-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">☰</button>
   <a href="#" class="brand">
-    ⚡ Agentic AI Architect
+    ⚡ <span class="brand-text">Agentic AI Architect</span>
     <span class="brand-badge">PRO</span>
   </a>
 
@@ -5095,9 +5130,9 @@ def route(step_type: str, risk_tier: str):
 </div>
 
 <div class="bottom-nav">
-  <button id="prevBtn">← Previous Chapter</button>
+  <button id="prevBtn">← <span class="nav-btn-label">Previous Chapter</span></button>
   <span id="posIndicator" style="font-size:0.88rem;color:var(--muted);font-weight:500;">Overview</span>
-  <button id="nextBtn">Next Chapter →</button>
+  <button id="nextBtn"><span class="nav-btn-label">Next Chapter</span> →</button>
 </div>
 
 <div class="modal-overlay" id="searchModal">
@@ -5106,7 +5141,7 @@ def route(step_type: str, risk_tier: str):
       🔍 <input type="text" id="searchInput" placeholder="Search chapters, topics, tools (e.g. MCP, LangGraph)..." autofocus />
     </div>
     <div class="search-results" id="searchResults">
-      <div style="padding:20px;text-align:center;color:var(--muted);font-size:0.9rem;">Type to start searching across all 23 chapters...</div>
+      <div style="padding:20px;text-align:center;color:var(--muted);font-size:0.9rem;">Type to start searching across all 28 chapters...</div>
     </div>
   </div>
 </div>
