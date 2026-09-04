@@ -1,6 +1,6 @@
 <script>
 mermaid.initialize({
-  startOnLoad: true,
+  startOnLoad: false,
   theme: 'dark',
   themeVariables: {
     fontFamily: 'Inter, sans-serif',
